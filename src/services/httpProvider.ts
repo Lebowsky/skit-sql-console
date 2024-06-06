@@ -1,3 +1,6 @@
+import { JSONValue } from "../models/jsonTypes"
+import {net} from 'electron'
+
 export class HttpProvider {
   private __url: string
   private __options: RequestInit
@@ -9,31 +12,34 @@ export class HttpProvider {
       }
     }
   }
-  
   public async get(url: string, params?: { [key: string]: string }) {
     this.__setUrl(url, params)
     this.__options = {...this.__options, method: 'GET'}
     return await this.__fetch()
   }
 
-  public async post(url: string,  data: any, params?: { [key: string]: string }){
+  public async post(url: string,  data?: JSONValue, params?: { [key: string]: string }){
     this.__setUrl(url, params)
     this.__options = {...this.__options, method: 'POST', body: JSON.stringify(data)}
     return await this.__fetch()
   }
-  private async __fetch() {
+  private async __fetch(): Promise<any[] | [any, any]> {
     return fetch(this.__url, this.__options)
       .then(response => {
         if (!response.ok) {
-          throw new Error('Network response was not ok\t' + response.status + this.__url );
+          throw new Error(`
+            Network response was not ok
+            status: ${response.status}
+            url:${response.url}
+          `);
         }
         return response.json();
       })
       .then(data => {
-        return data
+        return [data, null]
       })
       .catch(error => {
-        console.error('Fetch error:', error);
+        return [null, error]
       });
   }
 

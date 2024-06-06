@@ -1,9 +1,10 @@
 import { HttpProvider } from "../services/httpProvider";
+import { SQLQueryManager } from "../services/sqlQueryService"
 
-describe('testing index file', () => {
-  test('empty string should result in zero', async() => {
-    const sut = new HttpProvider()
-    const data = await sut.get('http://localhost:8000')
-    expect(data).toBe({ detail: 'Not Found' })
+describe('testing sqlQueryService', () => {
+  test('SQL query should return data', async() => {
+    const sut = new SQLQueryManager('localhost', 'SimpleTest', new HttpProvider())
+    const result = await sut.sendQuery('SELECT * FROM RS_docs')
+    console.log(result[1])
   })
 })
