@@ -19,7 +19,7 @@ export class SQLQueryManager {
     this.__queryParams = ''
     this.__httpProvider = provider
   }
-  public async sendQuery(query: string) {
+  public async sendQuery(query: string): Promise<[{[key: string]: string[]} | null, string | null]> {
     this.__query = query
     this.__queryParams = ''
 
@@ -33,7 +33,6 @@ export class SQLQueryManager {
     } catch (err){
       return [null, err.toString()]
     }
-
   }
 
   private __sendQuery() {
@@ -47,7 +46,7 @@ export class SQLQueryManager {
     return this.__httpProvider.post(url, null, queryArgs)
   }
 
-  public parseData(responseData: string) {
+  public parseData(responseData: string): {[key: string]: string[]} {
     try{
       const [header, ...body] = responseData.split('\r\n')
       if (header && header.length) {

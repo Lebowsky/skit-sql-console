@@ -1,32 +1,11 @@
 import '@blueprintjs/core/lib/css/blueprint.css'
 import { Button, InputGroup } from "@blueprintjs/core";
 import { SideMenu } from "./SideMenu";
+import { useSqlConsole } from '../../context/SqlConsoleContext';
+import { ISqlConsoleContext } from '../../models/contextProvider';
 
 export function SqlConsole() {
-  // const { sqlTableData, isConnected } = useSqlConsole() as ISqlConsoleContext
-  // const sqlScreenData = JSON.parse(localStorage.getItem('sqlScreenData'))
-  // let sqlQueryText = '', deviceHost = '', sqlBaseName = ''
-  // if (sqlScreenData) {
-  //   ({ sqlQueryText, deviceHost, sqlBaseName } = sqlScreenData)
-  // }
-
-  // const [host, setHost] = useState(deviceHost)
-  // const [baseName, setBaseName] = useState(sqlBaseName)
-
-  // async function handleConnect() {
-  //   sendQuery(SQL_QUERY_GET_TABLES, 'system')
-  // }
-
-  // async function sendQuery(sqlText: string, type: queryType = 'user') {
-  //   await window.electronAPI.sendQuery(
-  //     {
-  //       host: host,
-  //       baseName: baseName,
-  //       sqlText: sqlText,
-  //       queryType: type
-  //     }
-  //   )
-  // }
+  
 
   return (
     <div>
@@ -37,19 +16,25 @@ export function SqlConsole() {
 }
 
 function Header() {
+  const { host, setHost, databaseName, setDatabaseName, connectToDevice } = useSqlConsole() as ISqlConsoleContext
+  function handleConnect(){
+    connectToDevice()
+  }
   return (
     <div style={{ display: 'flex' }}>
-      <InputGroup placeholder="device host..." />
-      <InputGroup placeholder="database name..." />
-      <Button text={'Connect'} />
+      <InputGroup placeholder="device host..." value={host} onChange={(e) => setHost(e.target.value)} />
+      <InputGroup placeholder="database name..." value={databaseName} onChange={(e) => setDatabaseName(e.target.value)}/>
+      <Button text={'Connect'} onClick={handleConnect}/>
     </div>
   )
 }
 
 function Body() {
+  const { sideMenu } = useSqlConsole() as ISqlConsoleContext
+  
   return (
     <div style={{ display: 'flex', height: '100%' }}>
-      <SideMenu />
+      {sideMenu && <SideMenu sideMenu={sideMenu}/>}
       <Content />
     </div>
   )

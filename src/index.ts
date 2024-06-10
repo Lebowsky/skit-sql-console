@@ -25,14 +25,8 @@ const createWindow = (): void => {
   });
 
   ipcMain.handle('send-query', (event: { sender: WebContents }, props: ISqlQuery) => {
-    const sql = new SQLQueryManager(props.host, props.baseName, MockHttpProvider)
+    const sql = new SQLQueryManager(props.host, props.databaseName, MockHttpProvider)
     return sql.sendQuery(props.sqlText)
-    // (raw_data: string) => {
-    // const result: ISqlResponse = {
-    //   tableData: sql.parseData(raw_data),
-    //   queryType: props.queryType
-    // }
-    // mainWindow.webContents.send('update-sql-table', result)
   })
 
   // and load the index.html of the app.

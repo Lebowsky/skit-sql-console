@@ -2,6 +2,7 @@ import cloneDeep from "lodash/cloneDeep";
 import * as React from "react";
 
 import { Classes, Tree, type TreeNodeInfo } from "@blueprintjs/core";
+import { ISideMenuData } from "../../models/sqlConsoleModels";
 
 type NodePath = number[];
 
@@ -44,8 +45,11 @@ function treeExampleReducer(state: TreeNodeInfo[], action: TreeAction) {
   }
 }
 
-export const SideMenu = () => {
-  const [nodes, dispatch] = React.useReducer(treeExampleReducer, INITIAL_STATE);
+interface SideMenuProps {
+  sideMenu: ISideMenuData[]
+}
+export const SideMenu = ({ sideMenu }: SideMenuProps) => {
+  const [nodes, dispatch] = React.useReducer(treeExampleReducer, [...createNodes([...sideMenu])]);
 
   const handleNodeClick = React.useCallback(
     (node: TreeNodeInfo, nodePath: NodePath, e: React.MouseEvent<HTMLElement>) => {
@@ -86,6 +90,18 @@ export const SideMenu = () => {
   );
 };
 
+function createNodes(sideMenuData: ISideMenuData[]): TreeNodeInfo[]{
+  return INITIAL_STATE
+  // return sideMenuData.map((item, idx) => {
+  //   return{
+  //     id: idx,
+  //     hasCaret: true,
+  //     icon: 'th-list',
+  //     label: item.label,
+  //     childNodes:[]
+  //   }
+  // })
+}
 
 const INITIAL_STATE: TreeNodeInfo[] = [
   {

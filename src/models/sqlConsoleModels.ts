@@ -1,8 +1,9 @@
 export interface ISqlQuery {
   host: string,
-  baseName: string,
+  databaseName: string,
   sqlText: string,
-  queryType: queryType
+  queryType: queryType,
+  dataType: dataType
 }
 
 export interface IColumn {
@@ -26,4 +27,10 @@ export interface ISqlResponse {
   tableData: ISqlTableData
   queryType: queryType
 }
+
+export interface ISideMenuData {
+  label: string
+  childs: string[]
+}
 export type queryType = 'user' | 'system'
+export type dataType = 'tables' | 'columns' | 'data'
