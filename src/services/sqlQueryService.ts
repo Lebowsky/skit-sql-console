@@ -1,5 +1,5 @@
-import { IColumn, ISqlTableData } from '../models/sqlConsoleModels'
 import { IHttpProvider } from '../models/httpProvider'
+import { zip } from 'lodash';
 
 export class SQLQueryManager {
   private __deviceHost: string
@@ -19,11 +19,21 @@ export class SQLQueryManager {
     this.__queryParams = ''
     this.__httpProvider = provider
   }
-  public sendQuery(query: string) {
+  public async sendQuery(query: string) {
     this.__query = query
     this.__queryParams = ''
 
-    return this.__sendQuery()
+    const [data, error] = await this.__sendQuery()
+    try{
+      if (data){
+        return [this.parseData(data.toString()), null]
+      } else if (error){
+        throw Error(error)
+      }
+    } catch (err){
+      return [null, err.toString()]
+    }
+
   }
 
   private __sendQuery() {
@@ -37,23 +47,20 @@ export class SQLQueryManager {
     return this.__httpProvider.post(url, null, queryArgs)
   }
 
-  public parseData(responseData: string): ISqlTableData {
-    const [header, ...body] = responseData.split('\r\n')
-    
-    if (header && header.length) {
-      const columns: IColumn[] = header.split('|').map((el, idx) => (
-        {
-          id: idx.toString(),
-          label: el.trim(),
-        }
-      ))
-      const data = body
-        .map((el) => el.trim().split('|'))
-        .map(el => Object.fromEntries(el.map((el, idx) => ([idx.toString(), el]))))
-      return {
-        columns: columns,
-        data: data
+  public parseData(responseData: string) {
+    try{
+      const [header, ...body] = responseData.split('\r\n')
+      if (header && header.length) {
+        const data = zip(...body.filter(el => !!el.trim()).map(el => el.trim().split('|').map(el => el.trim())));
+
+        return Object.fromEntries(header.split('|').map((el, idx) => (
+          [el.trim(), data[idx]]
+        )))
       }
+    }
+    catch (err){
+      console.log(err)
+      return
     }
   }
 }
