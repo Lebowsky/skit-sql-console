@@ -34,7 +34,7 @@ function Body() {
   
   return (
     <div style={{ display: 'flex', height: '100%' }}>
-      {sideMenu && <SideMenu sideMenu={sideMenu}/>}
+      {sideMenu && <SideMenu sideMenu={sideMenu} key={Math.random()}/>}
       <Content />
     </div>
   )

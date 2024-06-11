@@ -1,4 +1,4 @@
-import { createContext, useContext, useEffect, useState } from "react";
+import { createContext, useContext, useState } from "react";
 import { ISqlConsoleContext } from "../models/contextProvider";
 import { ISideMenuData, dataType, queryType } from "../models/sqlConsoleModels";
 import { SQL_QUERY_GET_TABLES } from "../constants/sqlQueries";
@@ -11,7 +11,7 @@ interface SqlConsoleContextProvider {
 
 export function SqlConsoleContextProvider({ children }: SqlConsoleContextProvider) {
   const sqlScreenData = JSON.parse(localStorage.getItem('sqlScreenData'))
-  let sqlQueryText = '', deviceHost = '', sqlBaseName = ''
+  let sqlQueryText = '', deviceHost = '10.24.24.23', sqlBaseName = 'SimpleKeep'
   if (sqlScreenData) {
     ({ sqlQueryText, deviceHost, sqlBaseName } = sqlScreenData)
   }
@@ -26,7 +26,6 @@ export function SqlConsoleContextProvider({ children }: SqlConsoleContextProvide
     type: queryType = 'user',
     dataType: dataType = 'data'
   ): Promise<[{[key: string]: string[]} | null, string | null]> {
-
     const result = await window.electronAPI.sendQuery(
       {
         host: host,
@@ -41,33 +40,12 @@ export function SqlConsoleContextProvider({ children }: SqlConsoleContextProvide
 
   async function connectToDevice(){
     try {
-      const metadata = await getMetadata()
+      const metadata = await window.electronAPI.getMetadata({host, databaseName})
       setSideMenu([...metadata])
+      setIsConnected(true)
     } catch (err) {
-      console.log(err)
+      console.log('connectToDevice:' + err)
     }
-  }
-
-  async function getMetadata(){
-    const [data, err] = await sendQuery(SQL_QUERY_GET_TABLES)
-    const metadata: ISideMenuData[] = []
-    
-    if (err){
-      throw Error(err)
-    }
-
-    for (const table of data.name){
-      const [columns, err] = await sendQuery(`PRAGMA table_info(${table});`)
-      
-      if (err){
-        throw Error(err)
-      }
-      metadata.push({
-        label: table,
-        childs: Object.keys(columns)
-      })
-    }
-    return metadata
   }
 
   return (

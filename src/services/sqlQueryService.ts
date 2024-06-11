@@ -1,5 +1,7 @@
+import { SQL_QUERY_GET_TABLES } from '../constants/sqlQueries';
 import { IHttpProvider } from '../models/httpProvider'
 import { zip } from 'lodash';
+import { ISideMenuData } from '../models/sqlConsoleModels';
 
 export class SQLQueryManager {
   private __deviceHost: string
@@ -26,13 +28,33 @@ export class SQLQueryManager {
     const [data, error] = await this.__sendQuery()
     try{
       if (data){
-        return [this.parseData(data.toString()), null]
+        return [this.__parseData(data.toString()), null]
       } else if (error){
         throw Error(error)
       }
     } catch (err){
       return [null, err.toString()]
     }
+  }
+
+  public async getMetadata(){
+    const [data, err] = await this.sendQuery(SQL_QUERY_GET_TABLES)
+    const metadata: ISideMenuData[] = []
+    if (err){
+      throw Error(err)
+    }
+
+    for (const table of data.name){
+      const [columns, err] = await this.sendQuery(`PRAGMA table_info(${table});`)
+      if (err){
+        throw Error(err)
+      }
+      metadata.push({
+        label: table,
+        childs: columns.name
+      })
+    }
+    return metadata
   }
 
   private __sendQuery() {
@@ -43,10 +65,10 @@ export class SQLQueryManager {
       db_name: this.__dbName
     }
     const url = `http://${this.__deviceHost}:${this.__devicePort}`
-    return this.__httpProvider.post(url, null, queryArgs)
+    return this.__httpProvider.get(url, queryArgs)
   }
 
-  public parseData(responseData: string): {[key: string]: string[]} {
+  private __parseData(responseData: string): {[key: string]: string[]} {
     try{
       const [header, ...body] = responseData.split('\r\n')
       if (header && header.length) {

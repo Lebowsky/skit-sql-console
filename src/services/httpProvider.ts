@@ -29,14 +29,13 @@ export class HttpProvider {
   private async __fetch(): Promise<responseType> {
     try {
       const controller = new AbortController()
+      const signal = controller.signal;
       setTimeout(() => controller.abort(), this.__timeout)
-
-      const resp = await fetch(this.__url, { ...this.__options, ...{ signal: controller.signal } })
-      const contentType = resp.headers.get('content-type');
-      if (contentType && contentType.includes('application/json')) {
-        return [await resp.json(), null]
+      const resp = await fetch(this.__url, { signal })
+      if (resp.ok) {
+          return [await resp.text(), null]
       } else {
-        return [await resp.text(), null]
+        throw Error(await resp.text())
       }
     } catch (err) {
       return ([null, err.toString()])

@@ -50,7 +50,6 @@ interface SideMenuProps {
 }
 export const SideMenu = ({ sideMenu }: SideMenuProps) => {
   const [nodes, dispatch] = React.useReducer(treeExampleReducer, [...createNodes([...sideMenu])]);
-
   const handleNodeClick = React.useCallback(
     (node: TreeNodeInfo, nodePath: NodePath, e: React.MouseEvent<HTMLElement>) => {
       const originallySelected = node.isSelected;
@@ -91,16 +90,20 @@ export const SideMenu = ({ sideMenu }: SideMenuProps) => {
 };
 
 function createNodes(sideMenuData: ISideMenuData[]): TreeNodeInfo[]{
-  return INITIAL_STATE
-  // return sideMenuData.map((item, idx) => {
-  //   return{
-  //     id: idx,
-  //     hasCaret: true,
-  //     icon: 'th-list',
-  //     label: item.label,
-  //     childNodes:[]
-  //   }
-  // })
+  // return INITIAL_STATE
+  return sideMenuData.map((item, idx) => {
+    return{
+      id: idx,
+      hasCaret: true,
+      icon: 'th-list',
+      label: item.label,
+      childNodes: item.childs.map((item, idx) => ({
+        id: idx,
+        icon: 'column-layout',
+        label: item
+      }))
+    }
+  })
 }
 
 const INITIAL_STATE: TreeNodeInfo[] = [
