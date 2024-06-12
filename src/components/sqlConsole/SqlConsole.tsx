@@ -16,7 +16,7 @@ export function SqlConsole() {
   
   return (
     <div className='sql-console-wrapper'>
-      <ConnectSettings show={currentState===currentStates.settings} key={Math.random()}/>
+      {currentState===currentStates.settings && <ConnectSettings show={currentState===currentStates.settings}/>}
       <TreeMetadata sideMenu={sideMenu} show={currentState===currentStates.tables} key={Math.random()}/>
       <Content />
     </div>

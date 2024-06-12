@@ -22,7 +22,7 @@ export function SqlConsoleContextProvider({ children }: SqlConsoleContextProvide
   const [sqlText, setSqlText] = useState(sqlQueryText)
   const [sideMenu, setSideMenu] = useState<ISideMenuData[]>([])
   const [sqlTableData, setSqlTableData] = useState<{ [key: string]: string[] }>({})
-  const [currentState, setCurrentState] = useState<currentStates>(currentStates.settings)
+  const [currentState, setCurrentState] = useState<currentStates>(currentStates.readOnly)
 
   async function sendQuery(
     type: queryType = 'user',

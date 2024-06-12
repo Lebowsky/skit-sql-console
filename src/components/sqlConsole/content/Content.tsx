@@ -9,18 +9,19 @@ export function Content() {
   const { sendQuery, deviceStatus, currentState, setCurrentState } = useSqlConsole() as ISqlConsoleContext
 
   const handleExecute = () => sendQuery()
-  const handleSettings = () => setCurrentState(currentStates.settings)
+  const handleConnect = () => setCurrentState(currentStates.settings)
   const handleTables = () => setCurrentState(currentStates.tables)
 
   return (
     <div className='sql-console-content'>
-      <div style={{ padding: '15px 15px 0px 15px', width: 420, display: 'flex', justifyContent: 'space-between' }}>
+      <div style={{ padding: '15px 15px 0px 15px', width: 500, display: 'flex', justifyContent: 'space-between' }}>
+        <Button text={'Connect...'} onClick={handleConnect}></Button>
         <Button text={'Execute'} onClick={handleExecute} disabled={currentState === currentStates.readOnly}></Button>
         <Button text={'New'} disabled></Button>
         <Button text={'Open'} disabled></Button>
         <Button text={'Save'} disabled></Button>
-        <Button text={'Tables'} onClick={handleTables}></Button>
-        <Button text={'Settings'} onClick={handleSettings}></Button>
+        <Button text={'Tables'} onClick={handleTables} disabled={currentState === currentStates.readOnly}></Button>
+        <Button text={'Settings'} disabled></Button>
       </div>
       <div className='sql-text-editor-wrapper'>
         <SqlTextEditor></SqlTextEditor>
