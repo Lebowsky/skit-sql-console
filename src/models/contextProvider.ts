@@ -6,7 +6,7 @@ export interface ISqlConsoleContext {
   databaseName: string
   setDatabaseName(databaseName: string): void
   connectToDevice(): void
-  sendQuery(sqlText: string, type?: queryType): void
+  sendQuery(type?: queryType): void
   deviceStatus: deviceStatuses
   sqlText: string 
   setSqlText(text: string): void

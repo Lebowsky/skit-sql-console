@@ -23,7 +23,6 @@ export function SqlConsoleContextProvider({ children }: SqlConsoleContextProvide
   const [sideMenu, setSideMenu] = useState<ISideMenuData[]>([])
 
   async function sendQuery(
-    sqlText: string,
     type: queryType = 'user',
     dataType: dataType = 'data'
   ) {
@@ -37,6 +36,11 @@ export function SqlConsoleContextProvider({ children }: SqlConsoleContextProvide
           dataType: dataType
         }
       )
+      if (err) {
+        console.log(err)
+        return
+      }
+      console.log(result)
     } catch (err) {
       console.log(err)
     }

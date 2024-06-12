@@ -1,67 +1,37 @@
 import '@blueprintjs/core/lib/css/blueprint.css'
-import { Button, InputGroup } from "@blueprintjs/core";
-import { SideMenu } from "./SideMenu";
+import { Button } from "@blueprintjs/core";
 import { useSqlConsole } from '../../context/SqlConsoleContext';
 import { ISqlConsoleContext } from '../../models/contextProvider';
-import { deviceStatuses } from '../../models/sqlConsoleModels';
 import SqlQueryText from './SqlQueryText';
 import { SqlTable } from './SqlTable';
+import { SideMenu } from './SideMenu';
 
 export function SqlConsole() {
   return (
-    <div style={{ }}>
-      {/* <Header></Header> */}
-      <Body></Body>
-    </div>
-  )
-}
-
-function Body() {
-  const { sideMenu, deviceStatus } = useSqlConsole() as ISqlConsoleContext
-
-  return (
     <div style={{ display: 'flex' }}>
-      <div>
-        {sideMenu.length === 0 && <Header></Header>}
-        {sideMenu.length > 0 &&
-        <SideMenu sideMenu={sideMenu} key={Math.random()} />}
-      </div>
-
-      {<Content />}
+      <SideMenu/>
+      <Content />
     </div>
   )
 }
 
-function Header() {
-  const { host, setHost, databaseName, setDatabaseName, connectToDevice } = useSqlConsole() as ISqlConsoleContext
-  function handleConnect() {
-    connectToDevice()
+function Content() {
+  const { sendQuery } = useSqlConsole() as ISqlConsoleContext
+
+  function handleExecute() {
+    sendQuery()
   }
   return (
     <div style={{ 
-      margin: '10px', 
+      background: 'grey', 
+      width: '100%', 
       display: 'flex', 
-      flexDirection: 'column', 
-      justifyContent: 'space-between', 
-      height: '100px', 
-      width: 300,
+      flexDirection: 'column'
     }}>
-        <InputGroup placeholder="device host..." value={host} onChange={(e) => setHost(e.target.value)} />
-        <InputGroup placeholder="database name..." value={databaseName} onChange={(e) => setDatabaseName(e.target.value)} />
-        <Button text={'Connect'} onClick={handleConnect} style={{width: '100%'}}/>
-    </div>
-  )
-}
-
-
-
-function Content() {
-  return (
-    <div style={{ background: 'grey', width: '100%', display: 'flex', flexDirection: 'column'}}>
       <div style={{ padding: '15px 15px 0px 15px' }}>
         <SqlTextEditor></SqlTextEditor>
         <div style={{ paddingTop: 10 }}>
-          <Button text={'Execute'}></Button>
+          <Button text={'Execute'} onClick={handleExecute}></Button>
         </div>
       </div>
 
