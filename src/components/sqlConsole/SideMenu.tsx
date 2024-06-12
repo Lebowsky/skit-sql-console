@@ -1,7 +1,7 @@
 import cloneDeep from "lodash/cloneDeep";
 import * as React from "react";
 
-import { Classes, Tree, type TreeNodeInfo } from "@blueprintjs/core";
+import { Button, Classes, Tree, type TreeNodeInfo } from "@blueprintjs/core";
 import { ISideMenuData } from "../../models/sqlConsoleModels";
 
 type NodePath = number[];
@@ -81,6 +81,7 @@ export const SideMenu = ({ sideMenu }: SideMenuProps) => {
 
   return (
     <div style={{overflow: 'auto', width: 300}}>
+      <Button text={'<<<<< Connect'} style={{width: '100%'}}></Button>
       <Tree
         contents={nodes}
         onNodeClick={handleNodeClick}

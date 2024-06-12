@@ -19,6 +19,7 @@ export function SqlConsoleContextProvider({ children }: SqlConsoleContextProvide
   const [deviceStatus, setDeviceStatus] = useState<deviceStatuses>(deviceStatuses.notConnected)
   const [host, setHost] = useState(deviceHost)
   const [databaseName, setDatabaseName] = useState(sqlBaseName)
+  const [sqlText, setSqlText] = useState(sqlQueryText)
   const [sideMenu, setSideMenu] = useState<ISideMenuData[]>([])
 
   async function sendQuery(
@@ -70,7 +71,9 @@ export function SqlConsoleContextProvider({ children }: SqlConsoleContextProvide
         sendQuery,
         connectToDevice,
         deviceStatus,
-        sideMenu
+        sideMenu,
+        sqlText, 
+        setSqlText
       }}
     >
       {children}

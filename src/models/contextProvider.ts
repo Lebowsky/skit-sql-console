@@ -8,6 +8,8 @@ export interface ISqlConsoleContext {
   connectToDevice(): void
   sendQuery(sqlText: string, type?: queryType): void
   deviceStatus: deviceStatuses
+  sqlText: string 
+  setSqlText(text: string): void
   // sqlTableData: ISqlTableData
   // sqlTablesList: {[key: string]: string}[]
   sideMenu: ISideMenuData[]
