@@ -1,4 +1,4 @@
-import { ISideMenuData, deviceStatuses, queryType } from "./sqlConsoleModels"
+import { ISideMenuData, ISqlTableData, deviceStatuses, queryType } from "./sqlConsoleModels"
 
 export interface ISqlConsoleContext {
   host: string
@@ -10,7 +10,6 @@ export interface ISqlConsoleContext {
   deviceStatus: deviceStatuses
   sqlText: string 
   setSqlText(text: string): void
-  // sqlTableData: ISqlTableData
-  // sqlTablesList: {[key: string]: string}[]
+  sqlTableData: {[key: string]: string[]}
   sideMenu: ISideMenuData[]
 }

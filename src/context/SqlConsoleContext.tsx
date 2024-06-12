@@ -21,6 +21,7 @@ export function SqlConsoleContextProvider({ children }: SqlConsoleContextProvide
   const [databaseName, setDatabaseName] = useState(sqlBaseName)
   const [sqlText, setSqlText] = useState(sqlQueryText)
   const [sideMenu, setSideMenu] = useState<ISideMenuData[]>([])
+  const [sqlTableData, setSqlTableData] = useState< {[key: string]: string[]}>({})
 
   async function sendQuery(
     type: queryType = 'user',
@@ -40,7 +41,13 @@ export function SqlConsoleContextProvider({ children }: SqlConsoleContextProvide
         console.log(err)
         return
       }
-      console.log(result)
+      updateStorageData(
+        'sqlScreenData',
+        {
+          sqlQueryText: sqlText
+        }
+      )
+      setSqlTableData(result)
     } catch (err) {
       console.log(err)
     }
@@ -77,7 +84,8 @@ export function SqlConsoleContextProvider({ children }: SqlConsoleContextProvide
         deviceStatus,
         sideMenu,
         sqlText, 
-        setSqlText
+        setSqlText,
+        sqlTableData
       }}
     >
       {children}
