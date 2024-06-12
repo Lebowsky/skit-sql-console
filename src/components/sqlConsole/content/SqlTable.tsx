@@ -1,8 +1,8 @@
 
 import "@blueprintjs/table/lib/css/table.css";
 import { Cell, Column, Table2 } from "@blueprintjs/table";
-import { useSqlConsole } from "../../context/SqlConsoleContext";
-import { ISqlConsoleContext } from "../../models/contextProvider";
+import { useSqlConsole } from "../../../context/SqlConsoleContext";
+import { ISqlConsoleContext } from "../../../models/contextProvider";
 
 export function SqlTable() {
   const { sqlTableData } = useSqlConsole() as ISqlConsoleContext

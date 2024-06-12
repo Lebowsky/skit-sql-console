@@ -1,6 +1,6 @@
 import { createContext, useContext, useState } from "react";
 import { ISqlConsoleContext } from "../models/contextProvider";
-import { ISideMenuData, dataType, deviceStatuses, queryType } from "../models/sqlConsoleModels";
+import { currentStates, ISideMenuData, dataType, deviceStatuses, queryType } from "../models/sqlConsoleModels";
 import { getStorageData, updateStorageData } from "../utils/localStorageUtils";
 
 const SqlConsoleContext = createContext<ISqlConsoleContext | null>(null)
@@ -21,7 +21,8 @@ export function SqlConsoleContextProvider({ children }: SqlConsoleContextProvide
   const [databaseName, setDatabaseName] = useState(sqlBaseName)
   const [sqlText, setSqlText] = useState(sqlQueryText)
   const [sideMenu, setSideMenu] = useState<ISideMenuData[]>([])
-  const [sqlTableData, setSqlTableData] = useState< {[key: string]: string[]}>({})
+  const [sqlTableData, setSqlTableData] = useState<{ [key: string]: string[] }>({})
+  const [currentState, setCurrentState] = useState<currentStates>(currentStates.settings)
 
   async function sendQuery(
     type: queryType = 'user',
@@ -53,7 +54,7 @@ export function SqlConsoleContextProvider({ children }: SqlConsoleContextProvide
     }
   }
 
-  async function connectToDevice() {
+  async function connectToDevice(): Promise<boolean> {
     try {
       setDeviceStatus(deviceStatuses.connecting)
       const metadata = await window.electronAPI.getMetadata({ host, databaseName })
@@ -66,9 +67,11 @@ export function SqlConsoleContextProvider({ children }: SqlConsoleContextProvide
           sqlBaseName: databaseName,
         }
       )
+      return true
     } catch (err) {
       setDeviceStatus(deviceStatuses.notConnected)
       console.log('connectToDevice:\n' + err)
+      return false
     }
   }
 
@@ -83,9 +86,11 @@ export function SqlConsoleContextProvider({ children }: SqlConsoleContextProvide
         connectToDevice,
         deviceStatus,
         sideMenu,
-        sqlText, 
+        sqlText,
         setSqlText,
-        sqlTableData
+        sqlTableData,
+        currentState, 
+        setCurrentState
       }}
     >
       {children}

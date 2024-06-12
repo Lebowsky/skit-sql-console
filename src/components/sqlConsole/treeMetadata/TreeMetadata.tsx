@@ -1,8 +1,10 @@
 import cloneDeep from "lodash/cloneDeep";
 import * as React from "react";
 
-import { Button, Classes, Tree, type TreeNodeInfo } from "@blueprintjs/core";
-import { ISideMenuData } from "../../models/sqlConsoleModels";
+import { Classes, Drawer, Position, Tree, type TreeNodeInfo } from "@blueprintjs/core";
+import { currentStates, ISideMenuData } from "../../../models/sqlConsoleModels";
+import { useSqlConsole } from "../../../context/SqlConsoleContext";
+import { ISqlConsoleContext } from "../../../models/contextProvider";
 
 type NodePath = number[];
 
@@ -47,9 +49,13 @@ function treeReducer(state: TreeNodeInfo[], action: TreeAction) {
 
 interface TreeMetadataProps {
   sideMenu: ISideMenuData[]
+  show: boolean
 }
 
-export const TreeMetadata = ({ sideMenu }: TreeMetadataProps) => {
+export const TreeMetadata = ({ sideMenu, show }: TreeMetadataProps) => {
+  const { setCurrentState } = useSqlConsole() as ISqlConsoleContext
+
+  const [isOpen, setIsOpen] = React.useState(show)
   const [nodes, dispatch] = React.useReducer(treeReducer, [...createNodes([...sideMenu])]);
   const handleNodeClick = React.useCallback(
     (node: TreeNodeInfo, nodePath: NodePath, e: React.MouseEvent<HTMLElement>) => {
@@ -79,17 +85,26 @@ export const TreeMetadata = ({ sideMenu }: TreeMetadataProps) => {
     });
   }, []);
 
+  const handleClose = () => {
+    setIsOpen(false);
+    setCurrentState(currentStates.editor)
+  }
+  
   return (
-    <div style={{overflow: 'auto', width: 300}}>
-      <Button text={'<<<<< Connect'} style={{width: '100%'}}></Button>
-      <Tree
-        contents={nodes}
-        onNodeClick={handleNodeClick}
-        onNodeCollapse={handleNodeCollapse}
-        onNodeExpand={handleNodeExpand}
-        className={Classes.ELEVATION_0}
-      />
-    </div>
+    <>
+      {show &&
+        <TreeMetadataDrawer isOpen={isOpen} handleClose={handleClose}>
+          <div style={{ overflow: 'auto', width: 300 }}>
+            <Tree
+              contents={nodes}
+              onNodeClick={handleNodeClick}
+              onNodeCollapse={handleNodeCollapse}
+              onNodeExpand={handleNodeExpand}
+              className={Classes.ELEVATION_0}
+            />
+          </div>
+        </TreeMetadataDrawer>}
+    </>
 
   );
 };
@@ -144,3 +159,22 @@ const INITIAL_STATE: TreeNodeInfo[] = [
     ],
   },
 ];
+
+
+interface TreeMetadataDrawerProps {
+  children: React.ReactNode
+  isOpen: boolean
+  handleClose(): void
+}
+function TreeMetadataDrawer({ children, isOpen, handleClose }: TreeMetadataDrawerProps) {
+  return (
+    <Drawer
+      isOpen={isOpen}
+      position={Position.RIGHT}
+      size={'250px'}
+      onClose={handleClose}
+    >
+      {children}
+    </Drawer>
+  )
+}

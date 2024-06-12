@@ -38,5 +38,12 @@ export interface ISideMenuData {
   label: string
   childs: string[]
 }
+
+export enum currentStates {
+  settings = 'settings',
+  tables = 'tables',
+  editor = 'editor',
+  readOnly = 'readOnly'
+}
 export type queryType = 'user' | 'system'
 export type dataType = 'tables' | 'columns' | 'data'
