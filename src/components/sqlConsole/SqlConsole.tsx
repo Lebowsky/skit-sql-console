@@ -3,12 +3,11 @@ import { Button, InputGroup } from "@blueprintjs/core";
 import { SideMenu } from "./SideMenu";
 import { useSqlConsole } from '../../context/SqlConsoleContext';
 import { ISqlConsoleContext } from '../../models/contextProvider';
+import { deviceStatuses } from '../../models/sqlConsoleModels';
 
 export function SqlConsole() {
-  
-
   return (
-    <div>
+    <div style={{height: '90vh'}}>
       <Header></Header>
       <Body></Body>
     </div>
@@ -21,7 +20,7 @@ function Header() {
     connectToDevice()
   }
   return (
-    <div style={{ display: 'flex' }}>
+    <div style={{ display: 'flex', width: 500, justifyContent: 'space-between', padding: 15}}>
       <InputGroup placeholder="device host..." value={host} onChange={(e) => setHost(e.target.value)} />
       <InputGroup placeholder="database name..." value={databaseName} onChange={(e) => setDatabaseName(e.target.value)}/>
       <Button text={'Connect'} onClick={handleConnect}/>
@@ -30,19 +29,19 @@ function Header() {
 }
 
 function Body() {
-  const { sideMenu } = useSqlConsole() as ISqlConsoleContext
+  const { sideMenu, deviceStatus } = useSqlConsole() as ISqlConsoleContext
   
   return (
     <div style={{ display: 'flex', height: '100%' }}>
       {sideMenu && <SideMenu sideMenu={sideMenu} key={Math.random()}/>}
-      <Content />
+      {deviceStatus == deviceStatuses.connected && <Content />}
     </div>
   )
 }
 
 function Content() {
   return (
-    <div>
+    <div style={{background: 'grey', width: '100%'}}>
       <SqlTextEditor></SqlTextEditor>
       <SqlTable></SqlTable>
     </div>

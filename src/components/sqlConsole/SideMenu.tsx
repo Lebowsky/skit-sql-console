@@ -26,7 +26,7 @@ function forNodeAtPath(nodes: TreeNodeInfo[], path: NodePath, callback: (node: T
   callback(Tree.nodeFromPath(path, nodes));
 }
 
-function treeExampleReducer(state: TreeNodeInfo[], action: TreeAction) {
+function treeReducer(state: TreeNodeInfo[], action: TreeAction) {
   switch (action.type) {
     case "DESELECT_ALL":
       const newState1 = cloneDeep(state);
@@ -48,8 +48,9 @@ function treeExampleReducer(state: TreeNodeInfo[], action: TreeAction) {
 interface SideMenuProps {
   sideMenu: ISideMenuData[]
 }
+
 export const SideMenu = ({ sideMenu }: SideMenuProps) => {
-  const [nodes, dispatch] = React.useReducer(treeExampleReducer, [...createNodes([...sideMenu])]);
+  const [nodes, dispatch] = React.useReducer(treeReducer, [...createNodes([...sideMenu])]);
   const handleNodeClick = React.useCallback(
     (node: TreeNodeInfo, nodePath: NodePath, e: React.MouseEvent<HTMLElement>) => {
       const originallySelected = node.isSelected;
@@ -79,20 +80,23 @@ export const SideMenu = ({ sideMenu }: SideMenuProps) => {
   }, []);
 
   return (
-    <Tree
-      contents={nodes}
-      onNodeClick={handleNodeClick}
-      onNodeCollapse={handleNodeCollapse}
-      onNodeExpand={handleNodeExpand}
-      className={Classes.ELEVATION_0}
-    />
+    <div style={{overflow: 'auto', width: 300}}>
+      <Tree
+        contents={nodes}
+        onNodeClick={handleNodeClick}
+        onNodeCollapse={handleNodeCollapse}
+        onNodeExpand={handleNodeExpand}
+        className={Classes.ELEVATION_0}
+      />
+    </div>
+
   );
 };
 
-function createNodes(sideMenuData: ISideMenuData[]): TreeNodeInfo[]{
+function createNodes(sideMenuData: ISideMenuData[]): TreeNodeInfo[] {
   // return INITIAL_STATE
   return sideMenuData.map((item, idx) => {
-    return{
+    return {
       id: idx,
       hasCaret: true,
       icon: 'th-list',

@@ -1,3 +1,9 @@
+export enum deviceStatuses {
+  notConnected = 'notConnected',
+  connecting = 'connecting',
+  connected = 'connected'
+}
+
 export interface ISqlQuery {
   host: string,
   databaseName: string,

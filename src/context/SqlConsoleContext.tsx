@@ -1,6 +1,6 @@
 import { createContext, useContext, useState } from "react";
 import { ISqlConsoleContext } from "../models/contextProvider";
-import { ISideMenuData, dataType, queryType } from "../models/sqlConsoleModels";
+import { ISideMenuData, dataType, deviceStatuses, queryType } from "../models/sqlConsoleModels";
 import { getStorageData, updateStorageData } from "../utils/localStorageUtils";
 
 const SqlConsoleContext = createContext<ISqlConsoleContext | null>(null)
@@ -16,8 +16,7 @@ export function SqlConsoleContextProvider({ children }: SqlConsoleContextProvide
     ({ sqlQueryText, deviceHost, sqlBaseName } = sqlScreenData)
   }
 
-  const [isConnected, setIsConnected] = useState(false)
-  const [appState, setAppState] = useState()
+  const [deviceStatus, setDeviceStatus] = useState<deviceStatuses>(deviceStatuses.notConnected)
   const [host, setHost] = useState(deviceHost)
   const [databaseName, setDatabaseName] = useState(sqlBaseName)
   const [sideMenu, setSideMenu] = useState<ISideMenuData[]>([])
@@ -44,17 +43,19 @@ export function SqlConsoleContextProvider({ children }: SqlConsoleContextProvide
 
   async function connectToDevice() {
     try {
+      setDeviceStatus(deviceStatuses.connecting)
       const metadata = await window.electronAPI.getMetadata({ host, databaseName })
       setSideMenu([...metadata])
-      setIsConnected(true)
+      setDeviceStatus(deviceStatuses.connected)
       updateStorageData(
-        'sqlScreenData', 
+        'sqlScreenData',
         {
           deviceHost: host,
           sqlBaseName: databaseName,
         }
       )
     } catch (err) {
+      setDeviceStatus(deviceStatuses.notConnected)
       console.log('connectToDevice:\n' + err)
     }
   }
@@ -68,7 +69,7 @@ export function SqlConsoleContextProvider({ children }: SqlConsoleContextProvide
         setDatabaseName,
         sendQuery,
         connectToDevice,
-        isConnected,
+        deviceStatus,
         sideMenu
       }}
     >
