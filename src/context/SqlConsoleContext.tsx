@@ -2,6 +2,8 @@ import { createContext, useContext, useState } from "react";
 import { ISqlConsoleContext } from "../models/contextProvider";
 import { currentStates, ISideMenuData, dataType, deviceStatuses, queryType } from "../models/sqlConsoleModels";
 import { getStorageData, updateStorageData } from "../utils/localStorageUtils";
+import { Intent } from "@blueprintjs/core";
+import { AppToaster } from "../utils/toaster";
 
 const SqlConsoleContext = createContext<ISqlConsoleContext | null>(null)
 
@@ -29,6 +31,7 @@ export function SqlConsoleContextProvider({ children }: SqlConsoleContextProvide
     dataType: dataType = 'data'
   ) {
     try {
+      setDeviceStatus(deviceStatuses.executing)
       const [result, err] = await window.electronAPI.sendQuery(
         {
           host: host,
@@ -49,7 +52,9 @@ export function SqlConsoleContextProvider({ children }: SqlConsoleContextProvide
         }
       )
       setSqlTableData(result)
+      setDeviceStatus(deviceStatuses.connected)
     } catch (err) {
+      AppToaster.show({ message: "No connection", intent: Intent.DANGER })
       console.log(err)
     }
   }

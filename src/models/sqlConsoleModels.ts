@@ -1,6 +1,7 @@
 export enum deviceStatuses {
   notConnected = 'notConnected',
   connecting = 'connecting',
+  executing = 'executing',
   connected = 'connected'
 }
 
