@@ -6,7 +6,7 @@ export interface ISqlConsoleContext {
   databaseName: string
   setDatabaseName(databaseName: string): void
   connectToDevice(): void
-  sendQuery(sqlText: string, type?: queryType): Promise<[{[key: string]: string[]} | null, string | null]>
+  sendQuery(sqlText: string, type?: queryType): void
   // sqlTableData: ISqlTableData
   // sqlTablesList: {[key: string]: string}[]
   isConnected: boolean

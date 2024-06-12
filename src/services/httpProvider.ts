@@ -27,18 +27,16 @@ export class HttpProvider {
     return await this.__fetch()
   }
   private async __fetch(): Promise<responseType> {
-    try {
-      const controller = new AbortController()
-      const signal = controller.signal;
-      setTimeout(() => controller.abort(), this.__timeout)
-      const resp = await fetch(this.__url, { signal })
-      if (resp.ok) {
-          return [await resp.text(), null]
-      } else {
-        throw Error(await resp.text())
-      }
-    } catch (err) {
-      return ([null, err.toString()])
+    const controller = new AbortController()
+    const signal = controller.signal;
+
+    setTimeout(() => controller.abort(), this.__timeout)
+    const resp = await net.fetch(this.__url, { signal })
+    
+    if (resp.ok) {
+      return [await resp.text(), null]
+    } else {
+      return [null,await resp.text()]
     }
   }
 

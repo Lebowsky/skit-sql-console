@@ -1,7 +1,7 @@
 import { createContext, useContext, useState } from "react";
 import { ISqlConsoleContext } from "../models/contextProvider";
 import { ISideMenuData, dataType, queryType } from "../models/sqlConsoleModels";
-import { SQL_QUERY_GET_TABLES } from "../constants/sqlQueries";
+import { getStorageData, updateStorageData } from "../utils/localStorageUtils";
 
 const SqlConsoleContext = createContext<ISqlConsoleContext | null>(null)
 
@@ -10,13 +10,14 @@ interface SqlConsoleContextProvider {
 }
 
 export function SqlConsoleContextProvider({ children }: SqlConsoleContextProvider) {
-  const sqlScreenData = JSON.parse(localStorage.getItem('sqlScreenData'))
-  let sqlQueryText = '', deviceHost = '10.24.24.23', sqlBaseName = 'SimpleKeep'
+  const sqlScreenData = getStorageData('sqlScreenData')
+  let sqlQueryText = '', deviceHost = '', sqlBaseName = ''
   if (sqlScreenData) {
     ({ sqlQueryText, deviceHost, sqlBaseName } = sqlScreenData)
   }
 
   const [isConnected, setIsConnected] = useState(false)
+  const [appState, setAppState] = useState()
   const [host, setHost] = useState(deviceHost)
   const [databaseName, setDatabaseName] = useState(sqlBaseName)
   const [sideMenu, setSideMenu] = useState<ISideMenuData[]>([])
@@ -25,26 +26,36 @@ export function SqlConsoleContextProvider({ children }: SqlConsoleContextProvide
     sqlText: string,
     type: queryType = 'user',
     dataType: dataType = 'data'
-  ): Promise<[{[key: string]: string[]} | null, string | null]> {
-    const result = await window.electronAPI.sendQuery(
-      {
-        host: host,
-        databaseName: databaseName,
-        sqlText: sqlText,
-        queryType: type,
-        dataType: dataType
-      }
-    )
-    return result
+  ) {
+    try {
+      const [result, err] = await window.electronAPI.sendQuery(
+        {
+          host: host,
+          databaseName: databaseName,
+          sqlText: sqlText,
+          queryType: type,
+          dataType: dataType
+        }
+      )
+    } catch (err) {
+      console.log(err)
+    }
   }
 
-  async function connectToDevice(){
+  async function connectToDevice() {
     try {
-      const metadata = await window.electronAPI.getMetadata({host, databaseName})
+      const metadata = await window.electronAPI.getMetadata({ host, databaseName })
       setSideMenu([...metadata])
       setIsConnected(true)
+      updateStorageData(
+        'sqlScreenData', 
+        {
+          deviceHost: host,
+          sqlBaseName: databaseName,
+        }
+      )
     } catch (err) {
-      console.log('connectToDevice:' + err)
+      console.log('connectToDevice:\n' + err)
     }
   }
 
