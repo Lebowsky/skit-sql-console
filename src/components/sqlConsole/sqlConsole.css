@@ -1,0 +1,35 @@
+.sql-console-wrapper {
+  display: flex
+}
+
+.sql-console-content {
+  background: grey;
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  height: 99vh;
+  justify-content: center
+}
+
+.sql-text-editor-wrapper {
+  padding: 15px 15px 0px 15px;
+  width: 700px;
+  min-height: 300px;
+  flex: 1
+}
+
+.sql-table-wrapper {
+  padding: 15px;
+  /* height: 67%; */
+  flex: 3;
+  overflow: auto;
+}
+
+.sql-connect-settings-wrapper {
+  margin: 10px;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  height: 100px;
+  width: 200px
+}

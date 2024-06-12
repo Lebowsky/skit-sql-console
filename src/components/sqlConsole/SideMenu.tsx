@@ -19,14 +19,7 @@ function ConnectSettings() {
     connectToDevice()
   }
   return (
-    <div style={{
-      margin: '10px',
-      display: 'flex',
-      flexDirection: 'column',
-      justifyContent: 'space-between',
-      height: '100px',
-      width: 300,
-    }}>
+    <div className='sql-connect-settings-wrapper'>
       <InputGroup placeholder="device host..." value={host} onChange={(e) => setHost(e.target.value)} />
       <InputGroup placeholder="database name..." value={databaseName} onChange={(e) => setDatabaseName(e.target.value)} />
       <Button text={'Connect'} onClick={handleConnect} style={{ width: '100%' }} />

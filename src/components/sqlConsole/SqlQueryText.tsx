@@ -21,6 +21,8 @@ export default function SqlQueryText({ defaultValue, onChange }: SqlQueryTextPro
       showGutter={true}
       highlightActiveLine={true}
       value={defaultValue}
+      minLines={10}
+      // maxLines={Infinity}
       setOptions={{
         enableBasicAutocompletion: true,
         enableLiveAutocompletion: true,
@@ -29,8 +31,9 @@ export default function SqlQueryText({ defaultValue, onChange }: SqlQueryTextPro
         tabSize: 2,
       }} 
       style={{
-        height: '300px', 
-        width:'700px',
+        // height: '300px', 
+        height: '100%', 
+        width:'100%',
       }}
       />
   );

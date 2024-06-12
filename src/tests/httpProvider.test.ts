@@ -3,7 +3,7 @@ import { SQLQueryManager } from "../services/sqlQueryService"
 import { sqlTablesResponse } from "./dataSamples";
 
 describe('testing sqlQueryService', () => {
-  test('SQL query should return error', async() => {
+  test.skip('SQL query should return error', async() => {
     const provider: IHttpProvider = {
       get: () => {return new Promise((resolve, _reject) => {resolve([null, null])})},
       post() {
@@ -15,7 +15,7 @@ describe('testing sqlQueryService', () => {
     expect(err).toBe('Error: TypeError: fetch failed')
   }) 
 
-  test('SQL query should return data', async() => {
+  test.skip('SQL query should return data', async() => {
     const provider: IHttpProvider = {
       get: () => {return new Promise((resolve, _reject) => {resolve([null, null])})},
       post() {

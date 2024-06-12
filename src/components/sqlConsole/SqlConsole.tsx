@@ -1,4 +1,5 @@
 import '@blueprintjs/core/lib/css/blueprint.css'
+import './sqlConsole.css'
 import { Button } from "@blueprintjs/core";
 import { useSqlConsole } from '../../context/SqlConsoleContext';
 import { ISqlConsoleContext } from '../../models/contextProvider';
@@ -8,8 +9,8 @@ import { SideMenu } from './SideMenu';
 
 export function SqlConsole() {
   return (
-    <div style={{ display: 'flex' }}>
-      <SideMenu/>
+    <div className='sql-console-wrapper'>
+      <SideMenu />
       <Content />
     </div>
   )
@@ -22,20 +23,17 @@ function Content() {
     sendQuery()
   }
   return (
-    <div style={{ 
-      background: 'grey', 
-      width: '100%', 
-      display: 'flex', 
-      flexDirection: 'column'
-    }}>
-      <div style={{ padding: '15px 15px 0px 15px' }}>
+    <div className='sql-console-content'>
+      <div 
+      style={{ padding: '15px 0px 0px 15px' }}
+      >
+        <Button text={'Execute'} onClick={handleExecute}></Button>
+      </div>
+      <div className='sql-text-editor-wrapper'>
         <SqlTextEditor></SqlTextEditor>
-        <div style={{ paddingTop: 10 }}>
-          <Button text={'Execute'} onClick={handleExecute}></Button>
-        </div>
       </div>
 
-      <div style={{ padding: 15 }}>
+      <div className='sql-table-wrapper'>
         <SqlTable></SqlTable>
       </div>
     </div>
@@ -50,8 +48,6 @@ function SqlTextEditor() {
   }
 
   return (
-    <div>
-      <SqlQueryText defaultValue={sqlText} onChange={(e) => handleSqlText(e)}></SqlQueryText>
-    </div>
+    <SqlQueryText defaultValue={sqlText} onChange={(e) => handleSqlText(e)}></SqlQueryText>
   )
 }
