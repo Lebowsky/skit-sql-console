@@ -1,4 +1,4 @@
-import { Button, Drawer, InputGroup, Intent, Position } from "@blueprintjs/core"
+import { Button, Drawer, InputGroup, Position } from "@blueprintjs/core"
 import { useSqlConsole } from "../../../context/SqlConsoleContext"
 import { ISqlConsoleContext } from "../../../models/contextProvider"
 import { useState } from "react"

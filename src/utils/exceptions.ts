@@ -5,9 +5,8 @@ class BaseError {
   public stack: string
 
   constructor(message: string, cause: Error){
-    // super(message)
     this.cause = cause;
-    this.stack = cause.stack;
+    this.stack = cause?.stack;
   }
 }
 
@@ -17,7 +16,7 @@ export class ConnectionError extends BaseError {
     this.name = 'ConnectionError';
     this.message = message;
     this.cause = cause;
-    this.stack = cause.stack;
+    this.stack = cause?.stack;
   }
 }
 
@@ -27,6 +26,16 @@ export class EmptyResponseError extends BaseError {
     this.name = 'EmptyResponseError';
     this.message = message;
     this.cause = cause;
-    this.stack = cause.stack;
+    this.stack = cause?.stack;
+  }
+}
+
+export class HttpRequestError extends BaseError {
+  constructor(message: string, cause?: Error){
+    super(message, cause)
+    this.name = 'HttpRequestError'
+    this.message = message;
+    this.cause = cause;
+    this.stack = cause?.stack;
   }
 }

@@ -8,7 +8,10 @@ export async function sendQuery(props: ISqlQuery) {
   try {
     return await sql.sendQuery(props.sqlText)
   } catch (err) {
-    if (err.name === 'AbortError' || err.message === 'net::ERR_INTERNET_DISCONNECTED') {
+    console.log(err)
+    if (err.name === 'AbortError' ||
+        err.name === 'HttpRequestError' || 
+        err.message === 'net::ERR_INTERNET_DISCONNECTED') {
       throw new ConnectionError(err.message, err)
     } else if (err.message === 'net::ERR_EMPTY_RESPONSE') {
       throw new EmptyResponseError(err.message, err)

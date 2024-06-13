@@ -61,9 +61,11 @@ export function SqlConsoleContextProvider({ children }: SqlConsoleContextProvide
 
   function processingError(rawError: string){
     const error = JSON.parse(rawError)
+
+    console.log(rawError)
     
     if (error.name === 'ConnectionError') {
-      AppToaster.show({ message: "No connection", intent: Intent.DANGER })
+      AppToaster.show({ message: "No connection or bad request", intent: Intent.DANGER })
       console.error(error.message)
     } else if (error.name === 'EmptyResponseError') {
         AppToaster.show({ message: "Query error. Is the SQL syntax correct?", intent: Intent.DANGER })

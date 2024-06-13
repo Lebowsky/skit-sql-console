@@ -1,3 +1,4 @@
+import { HttpRequestError } from "../utils/exceptions"
 import { JSONValue } from "../models/jsonTypes"
 import { net } from 'electron'
 
@@ -44,7 +45,7 @@ export class HttpProvider {
         if (response.ok) {
           return response.text()
         }
-        throw new Error(`Request error. Status: ${response.status}`)
+        throw new HttpRequestError(`Request error. Status: ${response.status}`)
       })
       .then(responseText => {
         return responseText

@@ -16,13 +16,13 @@ export function Content() {
   return (
     <div className='sql-console-content'>
       <div style={{ padding: '15px 15px 0px 15px', width: 500, display: 'flex', justifyContent: 'space-between' }}>
-        <Button text={'Connect...'} onClick={handleConnect}></Button>
         <Button text={'Execute'} onClick={handleExecute} disabled={diabled}></Button>
         <Button text={'New'} disabled></Button>
         <Button text={'Open'} disabled></Button>
         <Button text={'Save'} disabled></Button>
         <Button text={'Tables'} onClick={handleTables} disabled={diabled}></Button>
         <Button text={'Settings'} disabled></Button>
+        <Button text={'Connect...'} onClick={handleConnect}></Button>
       </div>
       <div className='sql-text-editor-wrapper'>
         <SqlTextEditor></SqlTextEditor>
