@@ -21,34 +21,20 @@ export class SQLQueryManager {
     this.__queryParams = ''
     this.__httpProvider = provider
   }
-  public async sendQuery(query: string): Promise<[{[key: string]: string[]} | null, string | null]> {
+  public async sendQuery(query: string): Promise<{[key: string]: string[]}> {
     this.__query = query
     this.__queryParams = ''
 
-    const [data, error] = await this.__sendQuery()
-    try{
-      if (data){
-        return [this.__parseData(data.toString()), null]
-      } else if (error){
-        throw Error(error)
-      }
-    } catch (err){
-      return [null, err.toString()]
-    }
+    const data = await this.__sendQuery()
+    return this.__parseData(data.toString())
   }
 
-  public async getMetadata(){
-    const [data, err] = await this.sendQuery(SQL_QUERY_GET_TABLES)
+  public async getMetadata() : Promise<ISideMenuData[]>{
+    const data = await this.sendQuery(SQL_QUERY_GET_TABLES)
     const metadata: ISideMenuData[] = []
-    if (err){
-      throw Error(err)
-    }
 
     for (const table of data.name){
-      const [columns, err] = await this.sendQuery(`PRAGMA table_info(${table});`)
-      if (err){
-        throw Error(err)
-      }
+      const columns = await this.sendQuery(`PRAGMA table_info(${table});`)
       metadata.push({
         label: table,
         childs: columns.name

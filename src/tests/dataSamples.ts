@@ -14,9 +14,9 @@ export const sqlTablesResponse = `
     )\r\n
 `
 
-export const MockHttpProvider: IHttpProvider = {
-  get: () => {return new Promise((resolve, _reject) => {resolve([null, null])})},
-  post() {
-    return new Promise((resolve, _reject) => {resolve([sqlTablesResponse, null])})
-  }
-}
+// export const MockHttpProvider: IHttpProvider = {
+//   get: () => {return new Promise((resolve, _reject) => {resolve([null, null])})},
+//   post() {
+//     return new Promise((resolve, _reject) => {resolve([sqlTablesResponse, null])})
+//   }
+// }

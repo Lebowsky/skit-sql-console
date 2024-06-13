@@ -1,4 +1,4 @@
-import { ISideMenuData, ISqlTableData, currentStates, deviceStatuses, queryType } from "./sqlConsoleModels"
+import { ISideMenuData, currentStates, deviceStatuses } from "./sqlConsoleModels"
 
 export interface ISqlConsoleContext {
   host: string
@@ -6,7 +6,7 @@ export interface ISqlConsoleContext {
   databaseName: string
   setDatabaseName(databaseName: string): void
   connectToDevice(): Promise<boolean>
-  sendQuery(type?: queryType): void
+  sendQuery(): void
   deviceStatus: deviceStatuses
   sqlText: string 
   setSqlText(text: string): void

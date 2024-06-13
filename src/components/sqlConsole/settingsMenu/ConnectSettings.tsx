@@ -3,7 +3,6 @@ import { useSqlConsole } from "../../../context/SqlConsoleContext"
 import { ISqlConsoleContext } from "../../../models/contextProvider"
 import { useState } from "react"
 import { currentStates, deviceStatuses } from "../../../models/sqlConsoleModels"
-import { AppToaster } from "../../../utils/toaster"
 
 interface ConnectSettingsProps {
   show: boolean
@@ -17,7 +16,6 @@ export function ConnectSettings({ show }: ConnectSettingsProps) {
     const result = await connectToDevice()
     setIsOpen(!result)
     setCurrentState(result ? currentStates.editor : currentStates.settings)
-    !result && AppToaster.show({ message: "No connection", intent: Intent.DANGER });
   }
   const handleClose = () => {
     setIsOpen(false);

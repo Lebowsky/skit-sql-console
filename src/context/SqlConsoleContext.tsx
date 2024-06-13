@@ -1,6 +1,6 @@
 import { createContext, useContext, useState } from "react";
 import { ISqlConsoleContext } from "../models/contextProvider";
-import { currentStates, ISideMenuData, dataType, deviceStatuses, queryType } from "../models/sqlConsoleModels";
+import { currentStates, ISideMenuData, deviceStatuses } from "../models/sqlConsoleModels";
 import { getStorageData, updateStorageData } from "../utils/localStorageUtils";
 import { Intent } from "@blueprintjs/core";
 import { AppToaster } from "../utils/toaster";
@@ -26,57 +26,51 @@ export function SqlConsoleContextProvider({ children }: SqlConsoleContextProvide
   const [sqlTableData, setSqlTableData] = useState<{ [key: string]: string[] }>({})
   const [currentState, setCurrentState] = useState<currentStates>(currentStates.readOnly)
 
-  async function sendQuery(
-    type: queryType = 'user',
-    dataType: dataType = 'data'
-  ) {
-    try {
-      setDeviceStatus(deviceStatuses.executing)
-      const [result, err] = await window.electronAPI.sendQuery(
-        {
-          host: host,
-          databaseName: databaseName,
-          sqlText: sqlText,
-          queryType: type,
-          dataType: dataType
-        }
-      )
-      if (err) {
-        console.log(err)
-        return
-      }
-      updateStorageData(
-        'sqlScreenData',
-        {
-          sqlQueryText: sqlText
-        }
-      )
-      setSqlTableData(result)
+  async function sendQuery() {
+    setDeviceStatus(deviceStatuses.executing)
+    const [error, result] = await window.electronAPI.sendQuery({ host, databaseName, sqlText })
+
+    if (error) {
+      processingError(error)
       setDeviceStatus(deviceStatuses.connected)
-    } catch (err) {
-      AppToaster.show({ message: "No connection", intent: Intent.DANGER })
-      console.log(err)
+      return
     }
+    
+    updateStorageData('sqlScreenData', { sqlQueryText: sqlText })
+    setSqlTableData(result)
+    setDeviceStatus(deviceStatuses.connected)
   }
 
   async function connectToDevice(): Promise<boolean> {
-    try {
-      setDeviceStatus(deviceStatuses.connecting)
-      const metadata = await window.electronAPI.getMetadata({ host, databaseName })
-      setSideMenu([...metadata])
-      setDeviceStatus(deviceStatuses.connected)
-      updateStorageData(
-        'sqlScreenData',
-        {
-          deviceHost: host,
-          sqlBaseName: databaseName,
-        }
-      )
-      return true
-    } catch (err) {
+    setDeviceStatus(deviceStatuses.connecting)
+    const [error, metadata] = await window.electronAPI.getMetadata({ host, databaseName })
+
+    if (error) {
+      processingError(error)
       setDeviceStatus(deviceStatuses.notConnected)
-      console.log('connectToDevice:\n' + err)
       return false
+    }
+
+    setSideMenu([...metadata])
+    setDeviceStatus(deviceStatuses.connected)
+    updateStorageData('sqlScreenData', { deviceHost: host, sqlBaseName: databaseName })
+    setDeviceStatus(deviceStatuses.notConnected)
+    
+    return true
+  }
+
+  function processingError(rawError: string){
+    const error = JSON.parse(rawError)
+    
+    if (error.name === 'ConnectionError') {
+      AppToaster.show({ message: "No connection", intent: Intent.DANGER })
+      console.error(error.message)
+    } else if (error.name === 'EmptyResponseError') {
+        AppToaster.show({ message: "Query error. Is the SQL syntax correct?", intent: Intent.DANGER })
+        setDeviceStatus(deviceStatuses.connected)
+    } else {
+      AppToaster.show({ message: `Something went wrong. Unhandled error: ${error.message}`, intent: Intent.DANGER })
+      console.error(error.stack)
     }
   }
 
@@ -94,7 +88,7 @@ export function SqlConsoleContextProvider({ children }: SqlConsoleContextProvide
         sqlText,
         setSqlText,
         sqlTableData,
-        currentState, 
+        currentState,
         setCurrentState
       }}
     >

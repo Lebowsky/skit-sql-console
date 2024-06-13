@@ -9,8 +9,6 @@ export interface ISqlQuery {
   host: string,
   databaseName: string,
   sqlText: string,
-  queryType: queryType,
-  dataType: dataType
 }
 
 export interface IColumn {
@@ -32,7 +30,7 @@ export interface ISqlTableData {
 
 export interface ISqlResponse {
   tableData: ISqlTableData
-  queryType: queryType
+  queryType: string
 }
 
 export interface ISideMenuData {
@@ -46,5 +44,3 @@ export enum currentStates {
   editor = 'editor',
   readOnly = 'readOnly'
 }
-export type queryType = 'user' | 'system'
-export type dataType = 'tables' | 'columns' | 'data'
