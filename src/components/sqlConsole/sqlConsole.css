@@ -13,8 +13,7 @@
 
 .sql-text-editor-wrapper {
   padding: 15px 15px 0px 15px;
-  width: 700px;
-  min-height: 300px;
+  min-height: 250px;
   flex: 1
 }
 

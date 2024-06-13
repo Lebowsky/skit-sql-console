@@ -12,12 +12,14 @@ export function SqlTable() {
     return <Cell>{cells[rowIndex]}</Cell>
   }
   return (
-    <Table2 numRows={numRows}>
-      {Object.entries(sqlTableData).map(
-        ([column, cells]) => (
-          <Column key={column} name={column} cellRenderer={(rowIndex: number) => cellRenderer(cells, rowIndex)}/>
-        )
-      )}
-    </Table2>
+    <div className='sql-table-wrapper'>
+      <Table2 numRows={numRows}>
+        {Object.entries(sqlTableData).map(
+          ([column, cells]) => (
+            <Column key={column} name={column} cellRenderer={(rowIndex: number) => cellRenderer(cells, rowIndex)} />
+          )
+        )}
+      </Table2>
+    </div>
   )
 }
