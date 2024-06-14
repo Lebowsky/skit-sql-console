@@ -2,8 +2,7 @@ import { createContext, useContext, useState } from "react";
 import { ISqlConsoleContext } from "../models/contextProvider";
 import { currentStates, ISideMenuData, deviceStatuses } from "../models/sqlConsoleModels";
 import { getStorageData, updateStorageData } from "../utils/localStorageUtils";
-import { Intent } from "@blueprintjs/core";
-import { AppToaster } from "../utils/toaster";
+import { toast } from "../utils/toaster";
 
 const SqlConsoleContext = createContext<ISqlConsoleContext | null>(null)
 
@@ -62,16 +61,14 @@ export function SqlConsoleContextProvider({ children }: SqlConsoleContextProvide
   function processingError(rawError: string){
     const error = JSON.parse(rawError)
 
-    console.log(rawError)
-    
     if (error.name === 'ConnectionError') {
-      AppToaster.show({ message: "No connection or bad request", intent: Intent.DANGER })
+      toast.error('No connection or bad request')
       console.error(error.message)
     } else if (error.name === 'EmptyResponseError') {
-        AppToaster.show({ message: "Query error. Is the SQL syntax correct?", intent: Intent.DANGER })
+        toast.error('Query error. Is the SQL syntax correct?')
         setDeviceStatus(deviceStatuses.connected)
     } else {
-      AppToaster.show({ message: `Something went wrong. Unhandled error: ${error.message}`, intent: Intent.DANGER })
+      toast.error(`Something went wrong. Unhandled error: ${error.message}`)
       console.error(error.stack)
     }
   }

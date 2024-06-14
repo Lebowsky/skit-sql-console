@@ -39,3 +39,13 @@ export class HttpRequestError extends BaseError {
     this.stack = cause?.stack;
   }
 }
+
+export class UnhandledError extends BaseError {
+  constructor(message: string, cause?: Error){
+    super(message, cause)
+    this.name = 'UnhandledError'
+    this.message = message;
+    this.cause = cause;
+    this.stack = cause?.stack;
+  }
+}
