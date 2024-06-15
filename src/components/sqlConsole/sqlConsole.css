@@ -1,7 +1,6 @@
 .sql-console-wrapper {
   display: flex
 }
-
 .sql-console-content {
   background: grey;
   width: 100%;
@@ -10,20 +9,26 @@
   height: 99vh;
   justify-content: center
 }
-
+.sql-console-header {
+  display: flex;
+  
+  /* flex: 1 */
+}
+.sql-console-header-left {
+  display: flex;
+  flex-direction: column;
+}
 .sql-text-editor-wrapper {
   padding: 15px 15px 0px 15px;
   min-height: 250px;
-  flex: 1
+  
 }
-
 .sql-table-wrapper {
   padding: 15px;
   /* height: 67%; */
   flex: 3;
   overflow: auto;
 }
-
 .sql-connect-settings-wrapper {
   margin: 10px;
   display: flex;

@@ -4,6 +4,7 @@ import { ISqlConsoleContext } from "../../../models/contextProvider"
 import { SqlTable } from "./SqlTable"
 import SqlQueryText from "./SqlQueryText"
 import { currentStates, deviceStatuses } from "../../../models/sqlConsoleModels"
+import { QueryParamsTable } from "../queryParamsTable/QueryParamsTable"
 
 export function Content() {
   const { sqlText, setSqlText } = useSqlConsole() as ISqlConsoleContext
@@ -11,9 +12,16 @@ export function Content() {
 
   return (
     <div className='sql-console-content'>
-      <ButtonsGroup />
-      <SqlQueryText defaultValue={sqlText} onChange={(e) => handleSqlText(e)}/>
-      <SqlTable/>
+      <div className='sql-console-header'>
+        <div className='sql-console-header-left'>
+          <ButtonsGroup />
+          <SqlQueryText defaultValue={sqlText} onChange={(e) => handleSqlText(e)} />
+        </div>
+        <div className='sql-console-header-right'>
+          {/* <QueryParamsTable/> */}
+        </div>
+      </div>
+      <SqlTable />
     </div>
   )
 }
