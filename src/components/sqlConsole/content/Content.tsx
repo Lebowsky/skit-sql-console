@@ -4,7 +4,6 @@ import { ISqlConsoleContext } from "../../../models/contextProvider"
 import { SqlTable } from "./SqlTable"
 import SqlQueryText from "./SqlQueryText"
 import { currentStates, deviceStatuses } from "../../../models/sqlConsoleModels"
-import { QueryParamsTable } from "../queryParamsTable/QueryParamsTable"
 
 export function Content() {
   const { sqlText, setSqlText } = useSqlConsole() as ISqlConsoleContext

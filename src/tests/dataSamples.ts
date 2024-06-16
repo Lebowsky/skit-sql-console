@@ -1,5 +1,3 @@
-import { IHttpProvider } from "../models/httpProvider"
-
 export const sqlTablesResponse = `
   type | name | tbl_name | rootpage | sql\r
   table | RS_classifier_units | RS_classifier_units | 2 | CREATE TABLE RS_classifier_units (
@@ -13,10 +11,3 @@ export const sqlTablesResponse = `
       use_mark BOOLEAN  DEFAULT FALSE
     )\r\n
 `
-
-// export const MockHttpProvider: IHttpProvider = {
-//   get: () => {return new Promise((resolve, _reject) => {resolve([null, null])})},
-//   post() {
-//     return new Promise((resolve, _reject) => {resolve([sqlTablesResponse, null])})
-//   }
-// }

@@ -29,21 +29,22 @@ function forNodeAtPath(nodes: TreeNodeInfo[], path: NodePath, callback: (node: T
 }
 
 function treeReducer(state: TreeNodeInfo[], action: TreeAction) {
+  let newState = state
   switch (action.type) {
     case "DESELECT_ALL":
-      const newState1 = cloneDeep(state);
-      forEachNode(newState1, node => (node.isSelected = false));
-      return newState1;
+      newState = cloneDeep(state);
+      forEachNode(newState, node => (node.isSelected = false));
+      return newState;
     case "SET_IS_EXPANDED":
-      const newState2 = cloneDeep(state);
-      forNodeAtPath(newState2, action.payload.path, node => (node.isExpanded = action.payload.isExpanded));
-      return newState2;
+      newState = cloneDeep(state);
+      forNodeAtPath(newState, action.payload.path, node => (node.isExpanded = action.payload.isExpanded));
+      return newState;
     case "SET_IS_SELECTED":
-      const newState3 = cloneDeep(state);
-      forNodeAtPath(newState3, action.payload.path, node => (node.isSelected = action.payload.isSelected));
-      return newState3;
+      newState = cloneDeep(state);
+      forNodeAtPath(newState, action.payload.path, node => (node.isSelected = action.payload.isSelected));
+      return newState;
     default:
-      return state;
+      return newState;
   }
 }
 
@@ -89,7 +90,7 @@ export const TreeMetadata = ({ sideMenu, show }: TreeMetadataProps) => {
     setIsOpen(false);
     setCurrentState(currentStates.editor)
   }
-  
+
   return (
     <>
       {show &&
@@ -125,41 +126,6 @@ function createNodes(sideMenuData: ISideMenuData[]): TreeNodeInfo[] {
     }
   })
 }
-
-const INITIAL_STATE: TreeNodeInfo[] = [
-  {
-    id: 0,
-    hasCaret: true,
-    icon: "th-list",
-    label: 'Table 1',
-    childNodes: [
-      {
-        id: 2,
-        icon: "column-layout",
-        label: "Column 1",
-      },
-    ],
-  },
-  {
-    id: 1,
-    icon: "th-list",
-    isExpanded: false,
-    label: 'Table 2',
-    childNodes: [
-      {
-        id: 0,
-        icon: "column-layout",
-        label: "Column 0",
-      },
-      {
-        id: 1,
-        icon: "column-layout",
-        label: "Column 1",
-      },
-    ],
-  },
-];
-
 
 interface TreeMetadataDrawerProps {
   children: React.ReactNode
